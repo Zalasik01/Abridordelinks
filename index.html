@@ -87,10 +87,20 @@
     <div class="link-list" id="linkList"></div>
 
     <script>
-        let currentIndex = 0;
+        let currentIndex = parseInt(localStorage.getItem('currentIndex')) || 0;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedLinks = localStorage.getItem('links');
+            if (savedLinks) {
+                document.getElementById('linksInput').value = savedLinks;
+                renderLinks();
+            }
+        });
 
         document.getElementById('openLinksButton').addEventListener('click', function() {
             const linksInput = document.getElementById('linksInput').value;
+            localStorage.setItem('links', linksInput);
+
             const links = linksInput.split('\n').filter(link => link.trim() !== '');
             const linkListDiv = document.getElementById('linkList');
             const linksCount = parseInt(document.getElementById('linksCount').value);
@@ -118,7 +128,31 @@
             }
 
             currentIndex = endIndex;
+            localStorage.setItem('currentIndex', currentIndex);
         });
+
+        function renderLinks() {
+            const linksInput = document.getElementById('linksInput').value;
+            const links = linksInput.split('\n').filter(link => link.trim() !== '');
+            const linkListDiv = document.getElementById('linkList');
+
+            linkListDiv.innerHTML = '';
+
+            for (let i = 0; i < links.length; i++) {
+                const linkElement = document.createElement('a');
+                linkElement.href = links[i];
+                linkElement.textContent = links[i];
+                linkElement.target = '_blank';
+                linkElement.classList.add('link');
+
+                if (i < currentIndex) {
+                    linkElement.classList.add('opened');
+                }
+
+                linkListDiv.appendChild(linkElement);
+                linkListDiv.appendChild(document.createElement('br'));
+            }
+        }
     </script>
 </body>
 </html>
