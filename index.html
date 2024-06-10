@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Abridor de Links</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            color: #4a90e2;
+        }
+        textarea {
+            width: 100%;
+            max-width: 600px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            resize: vertical;
+        }
+        button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #4a90e2;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #357ab8;
+        }
+        .link-list {
+            margin-top: 20px;
+            width: 100%;
+            max-width: 600px;
+        }
+        .link {
+            display: block;
+            margin-bottom: 5px;
+            padding: 5px;
+            border-bottom: 1px solid #ddd;
+            text-decoration: none;
+            color: #333;
+            transition: color 0.3s;
+        }
+        .link.opened {
+            color: green;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Abridor de Links</h1>
+    <textarea id="linksInput" rows="10" placeholder="Insira os links aqui, um por linha"></textarea><br>
+    <button id="openLinksButton">Abrir 10 Links</button>
+
+    <div class="link-list" id="linkList"></div>
+
+    <script>
+        let currentIndex = 0;
+
+        document.getElementById('openLinksButton').addEventListener('click', function() {
+            const linksInput = document.getElementById('linksInput').value;
+            const links = linksInput.split('\n').filter(link => link.trim() !== '');
+            const linkListDiv = document.getElementById('linkList');
+
+            let linksToOpen = 10;
+            let endIndex = Math.min(currentIndex + linksToOpen, links.length);
+
+            for (let i = currentIndex; i < endIndex; i++) {
+                if (!document.querySelector(`a[href='${links[i]}']`)) {
+                    const linkElement = document.createElement('a');
+                    linkElement.href = links[i];
+                    linkElement.textContent = links[i];
+                    linkElement.target = '_blank';
+                    linkElement.classList.add('link');
+                    linkElement.classList.add('opened');
+
+                    linkListDiv.appendChild(linkElement);
+                    linkListDiv.appendChild(document.createElement('br'));
+                }
+                window.open(links[i], '_blank');
+            }
+
+            currentIndex = endIndex;
+        });
+    </script>
+</body>
+</html>
