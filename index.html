@@ -27,8 +27,12 @@
             font-size: 16px;
             resize: vertical;
         }
-        button {
+        .controls {
             margin-top: 10px;
+            display: flex;
+            align-items: center;
+        }
+        button {
             padding: 10px 20px;
             font-size: 16px;
             color: #fff;
@@ -37,9 +41,16 @@
             border-radius: 5px;
             cursor: pointer;
             transition: background-color 0.3s;
+            margin-left: 10px;
         }
         button:hover {
             background-color: #357ab8;
+        }
+        select {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
         }
         .link-list {
             margin-top: 20px;
@@ -64,8 +75,15 @@
 <body>
     <h1>Abridor de Links</h1>
     <textarea id="linksInput" rows="10" placeholder="Insira os links aqui, um por linha"></textarea><br>
-    <button id="openLinksButton">Abrir 10 Links</button>
-
+    <div class="controls">
+        <select id="linksCount">
+            <option value="5">5 Links</option>
+            <option value="10" selected>10 Links</option>
+            <option value="15">15 Links</option>
+            <option value="20">20 Links</option>
+        </select>
+        <button id="openLinksButton">Abrir Links</button>
+    </div>
     <div class="link-list" id="linkList"></div>
 
     <script>
@@ -75,9 +93,14 @@
             const linksInput = document.getElementById('linksInput').value;
             const links = linksInput.split('\n').filter(link => link.trim() !== '');
             const linkListDiv = document.getElementById('linkList');
+            const linksCount = parseInt(document.getElementById('linksCount').value);
 
-            let linksToOpen = 10;
-            let endIndex = Math.min(currentIndex + linksToOpen, links.length);
+            if (currentIndex >= links.length) {
+                alert('Todos os links já foram abertos.');
+                return;
+            }
+
+            let endIndex = Math.min(currentIndex + linksCount, links.length);
 
             for (let i = currentIndex; i < endIndex; i++) {
                 if (!document.querySelector(`a[href='${links[i]}']`)) {
